@@ -2,10 +2,12 @@ package com.giftandgo.service;
 
 import com.giftandgo.error.BadRequestException;
 import com.giftandgo.model.EntryData;
+import com.giftandgo.model.OutcomeData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DataServiceImplTest {
 
@@ -63,4 +65,24 @@ class DataServiceImplTest {
 
         assertEquals("wrong top speed", ex.getMessage());
     }
+
+    @Test
+    void convertToOutcomeData(){
+
+        EntryData entryData = new EntryData(
+                "18148426-89e1-11ee-b9d1-0242ac120002",
+                "1X1D14",
+                "John Smith",
+                "Likes Apricots",
+                "Rides A Bike",
+                6.2,
+                12.1
+        );
+
+        OutcomeData result = dataService.convertToOutcomeData(entryData);
+
+        OutcomeData expectedResult = new OutcomeData("John Smith", "Rides A Bike",  12.1);
+        assertEquals(expectedResult, result);
+    }
+
 }

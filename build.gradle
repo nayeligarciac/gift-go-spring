@@ -12,7 +12,6 @@ repositories {
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web:3.3.13'
-   // implementation 'org.springframework.boot:spring-boot-starter-actuator:3.3.13'
     //implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.13'
 
     //runtimeOnly 'com.h2database:h2:2.1.214'
@@ -20,6 +19,9 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.mockito:mockito-core:5.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+    testImplementation 'commons-io:commons-io:2.20.0'
 }
 
 test {

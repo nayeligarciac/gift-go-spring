@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FileServiceImpl implements  FileService {
+public class FileServiceImpl implements FileService {
 
 
     private final DataService dataService;
@@ -43,7 +43,7 @@ public class FileServiceImpl implements  FileService {
             }
         }
         catch (IOException e) {
-            throw new RuntimeException("Failed to store file.", e);
+            throw new RuntimeException("Failed to parse file.", e);
         }
        return list;
     }
