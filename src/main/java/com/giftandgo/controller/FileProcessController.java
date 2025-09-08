@@ -1,9 +1,11 @@
 package com.giftandgo.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.giftandgo.model.OutcomeData;
+import com.giftandgo.service.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -12,10 +14,19 @@ import java.util.List;
 @RequestMapping("/file")
 public class FileProcessController {
 
+    private final FileService fileService;
 
-    @GetMapping
-    public String getClients() {
-        return "File processed successfully";
+    @Autowired
+    public FileProcessController(FileService fileService) {
+        this.fileService = fileService;
+    }
+
+
+    @PostMapping("/")
+    public List<OutcomeData> handleFileUpload(@RequestParam("file") MultipartFile file,
+                                              RedirectAttributes redirectAttributes) {
+
+        return fileService.processFile(file);
     }
 
 }
