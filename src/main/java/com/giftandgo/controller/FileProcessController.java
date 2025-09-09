@@ -20,7 +20,6 @@ public class FileProcessController {
         this.fileService = fileService;
     }
 
-
     @PostMapping("/")
     public List<OutcomeData> handleFileUpload(@RequestParam("file") MultipartFile file) {
         return fileService.processFile(file);

@@ -45,8 +45,6 @@ public class CloudIpProviderServiceImpl implements CloudIpProviderService {
     }
 
     void loadIpRanges() {
-
-        // Use try-catch for each provider so if one fails, the others can still load
         try {
             Set<String> awsRanges = fetchAwsIpRanges();
             blockedAwsCidrRanges.clear();
