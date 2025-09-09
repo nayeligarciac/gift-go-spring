@@ -49,7 +49,7 @@ class FileServiceImplTest {
         when(dataService.convertToOutcomeData(entryData))
                 .thenReturn(outcomeData);
 
-        List<OutcomeData> result =  fileService.processFile(multipartFile);
+        List<OutcomeData> result = fileService.processFile(multipartFile);
         assertEquals(Collections.singletonList(outcomeData), result);
     }
 
