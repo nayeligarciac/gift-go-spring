@@ -9,12 +9,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestClient;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class IpGeolocationServiceTest {
+class IpGeolocationServiceImplTest {
 
     IpGeolocationService ipGeolocationService;
     @Mock
@@ -22,7 +21,7 @@ class IpGeolocationServiceTest {
 
     @BeforeEach
     void setup() {
-        ipGeolocationService = new IpGeolocationService(restClient);
+        ipGeolocationService = new IpGeolocationServiceImpl(restClient);
     }
 
     @Test
@@ -32,7 +31,6 @@ class IpGeolocationServiceTest {
 
         IPGeolocation response = ipGeolocationService.getIpGeolocation(ip);
         assertEquals(ipGeolocation, response);
-
     }
 
     @Test
@@ -40,10 +38,8 @@ class IpGeolocationServiceTest {
         String ip = "24.48.0.1";
         mockRestClient(ip, "fail");
 
-        BadRequestException ex = assertThrows(BadRequestException.class,
-                ()-> ipGeolocationService.getIpGeolocation(ip));
-
-        assertEquals("There is a problem with the IP 24.48.0.1", ex.getMessage());
+        IPGeolocation ipGeolocation = ipGeolocationService.getIpGeolocation(ip);
+        assertNull(ipGeolocation);
     }
 
     private IPGeolocation mockRestClient(String ip, String responseStatus) {

@@ -12,6 +12,7 @@ repositories {
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web:3.3.13'
+    implementation 'commons-net:commons-net:3.10.0'
     //implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.3.13'
 
     //runtimeOnly 'com.h2database:h2:2.1.214'

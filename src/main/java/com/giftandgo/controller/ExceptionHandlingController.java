@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionHandlingController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({
-            BadRequestException.class
-    })
+    @ExceptionHandler(BadRequestException.class)
     @ResponseBody
-    ErrorInfo handleBadRequest( Exception ex) {
+    ErrorInfo handleBadRequest(BadRequestException ex) {
         return new ErrorInfo(HttpStatus.BAD_REQUEST, ex);
     }
 }
