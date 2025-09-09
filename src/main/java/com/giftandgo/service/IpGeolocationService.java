@@ -3,9 +3,10 @@ package com.giftandgo.service;
 import com.giftandgo.error.BadRequestException;
 import com.giftandgo.model.IPGeolocation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+@Service
 public class IpGeolocationService {
 
     private final RestClient restClient;

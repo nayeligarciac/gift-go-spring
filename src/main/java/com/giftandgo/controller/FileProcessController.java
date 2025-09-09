@@ -5,7 +5,6 @@ import com.giftandgo.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -23,9 +22,7 @@ public class FileProcessController {
 
 
     @PostMapping("/")
-    public List<OutcomeData> handleFileUpload(@RequestParam("file") MultipartFile file,
-                                              RedirectAttributes redirectAttributes) {
-
+    public List<OutcomeData> handleFileUpload(@RequestParam("file") MultipartFile file) {
         return fileService.processFile(file);
     }
 
