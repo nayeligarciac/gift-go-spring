@@ -1,6 +1,10 @@
 package com.giftandgo.component;
 
+import com.giftandgo.aspect.LocalStore;
 import com.giftandgo.error.BlockedRequestException;
+import com.giftandgo.model.IPGeolocation;
+import com.giftandgo.model.LogEntry;
+import com.giftandgo.service.IpGeolocationService;
 import com.giftandgo.service.ValidateIpService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 @Order(1)
@@ -21,10 +26,12 @@ public class IpFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(IpFilter.class);
     private final ValidateIpService validateIpService;
+    private final IpGeolocationService ipGeolocationService;
 
     @Autowired
-    public IpFilter(ValidateIpService validateIpService) {
+    public IpFilter(ValidateIpService validateIpService, IpGeolocationService ipGeolocationService) {
         this.validateIpService = validateIpService;
+        this.ipGeolocationService = ipGeolocationService;
     }
 
     @Override
@@ -34,7 +41,9 @@ public class IpFilter extends OncePerRequestFilter {
         String ip = getClientIpAddress(request);
         logger.info("Client ip address {}", ip);
         try {
-            validateIpService.validateIp(ip);
+            IPGeolocation ipGeolocation = ipGeolocationService.getIpGeolocation(ip);
+            validateIpService.validateIp(ip, ipGeolocation);
+            createLogEntry(ipGeolocation, ip, request.getRequestURI());
         } catch(BlockedRequestException e){
             response.sendError(HttpServletResponse.SC_FORBIDDEN,
                     e.getLocalizedMessage());
@@ -49,5 +58,22 @@ public class IpFilter extends OncePerRequestFilter {
             ipAddress = request.getRemoteAddr();
         }
         return ipAddress;
+    }
+
+    private void createLogEntry(IPGeolocation ipGeolocation, String ip, String requestUri) {
+        String countryCode = null;
+        String ipProvider = null;
+        if(ipGeolocation != null){
+            countryCode = ipGeolocation.countryCode();
+            ipProvider = ipGeolocation.isp();
+        }
+
+        LogEntry logEntry = new LogEntry();
+        logEntry.setId(UUID.randomUUID().toString());
+        logEntry.setCountryCode(countryCode);
+        logEntry.setIpAddress(ip);
+        logEntry.setIpProvider(ipProvider);
+        logEntry.setRequestUri(requestUri);
+        LocalStore.setLogEntry(logEntry);
     }
 }

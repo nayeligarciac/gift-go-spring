@@ -16,14 +16,12 @@ import static org.mockito.Mockito.*;
 class ValidateIpServiceImplTest {
 
     @Mock
-    IpGeolocationService ipGeolocationService;
-    @Mock
     CloudIpProviderService cloudIpProviderService;
     ValidateIpService validateIpService;
 
     @BeforeEach
     void setup() {
-        validateIpService = new ValidateIpServiceImpl(ipGeolocationService, cloudIpProviderService);
+        validateIpService = new ValidateIpServiceImpl(cloudIpProviderService);
     }
 
     @Test
@@ -32,9 +30,7 @@ class ValidateIpServiceImplTest {
         IPGeolocation ipGeolocation = mock(IPGeolocation.class);
         when(ipGeolocation.countryCode()).thenReturn("UK");
 
-        when(ipGeolocationService.getIpGeolocation(ip)).thenReturn(ipGeolocation);
-
-        validateIpService.validateIp(ip);
+        validateIpService.validateIp(ip, ipGeolocation);
 
         verify(cloudIpProviderService).validateIpCloudProvider(ip);
     }
@@ -45,10 +41,8 @@ class ValidateIpServiceImplTest {
         IPGeolocation ipGeolocation = mock(IPGeolocation.class);
         when(ipGeolocation.countryCode()).thenReturn("US");
 
-        when(ipGeolocationService.getIpGeolocation(ip)).thenReturn(ipGeolocation);
-
         BlockedRequestException ex = assertThrows(BlockedRequestException.class,
-                ()->  validateIpService.validateIp(ip));
+                ()->  validateIpService.validateIp(ip, ipGeolocation));
 
         verify(cloudIpProviderService, never()).validateIpCloudProvider(ip);
         assertEquals("This request belong from blocked country", ex.getMessage());
@@ -58,12 +52,9 @@ class ValidateIpServiceImplTest {
     void validateIp_whenThereIsNoIPGeolocation(){
         String ip = "24.48.0.1";
 
-        when(ipGeolocationService.getIpGeolocation(ip)).thenReturn(null);
-
-        validateIpService.validateIp(ip);
+        validateIpService.validateIp(ip, null);
 
         verify(cloudIpProviderService).validateIpCloudProvider(ip);
-
     }
 
     @Test
@@ -72,12 +63,11 @@ class ValidateIpServiceImplTest {
         IPGeolocation ipGeolocation = mock(IPGeolocation.class);
         when(ipGeolocation.countryCode()).thenReturn("UK");
 
-        when(ipGeolocationService.getIpGeolocation(ip)).thenReturn(ipGeolocation);
         doThrow(new IpFromBlockedCloudProviderException("blocked ip"))
                 .when(cloudIpProviderService).validateIpCloudProvider(ip);
 
         BlockedRequestException ex = assertThrows(BlockedRequestException.class,
-                ()->  validateIpService.validateIp(ip));
+                ()->  validateIpService.validateIp(ip, ipGeolocation));
 
         assertEquals("blocked ip", ex.getMessage());
     }
