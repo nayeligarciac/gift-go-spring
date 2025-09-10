@@ -22,16 +22,16 @@ It uses custom filters and services to validate IPs and log request details.
   ```
 2. **Build the project**
   ```bash
-   ./gradlew build
+    ./gradlew build
   ```
 3. **Run the application**
- 
  ```bash
     ./gradlew run
  ```
+
 ## Testing
 To run tests:
- ```bash
+  ```bash
     ./gradlew test
  ```
 
