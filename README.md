@@ -1,1 +1,37 @@
-readme 
+
+Spring project
+
+## Description
+This project is a Spring Boot application that filters incoming HTTP requests based on client IP address and geolocation.
+It uses custom filters and services to validate IPs and log request details.
+
+
+## Technologies
+- Java
+- Spring Boot
+- Gradle
+
+## Prerequisites
+- Java 17+ (or your project's required version)
+- Gradle 7+ (or use the Gradle Wrapper)
+
+## Setup
+1. **Clone the repository**
+  ```bash
+    git clone https://github.com/yourusername/giftandgo-ip-filter.git cd giftandgo-ip-filter
+    cd your-repo
+  ```
+2. **Build the project**
+   ```bash
+   ./gradlew build
+   ```
+3. **Run the application**
+     ```bash
+       ./gradlew run
+     ```
+
+## Testing
+To run tests:
+```bash
+  ./gradlew test
+```
