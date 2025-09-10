@@ -5,7 +5,6 @@ Spring project
 This project is a Spring Boot application that filters incoming HTTP requests based on client IP address and geolocation.
 It uses custom filters and services to validate IPs and log request details.
 
-
 ## Technologies
 - Java
 - Spring Boot
@@ -22,16 +21,23 @@ It uses custom filters and services to validate IPs and log request details.
     cd your-repo
   ```
 2. **Build the project**
-   ```bash
+  ```bash
    ./gradlew build
-   ```
+  ```
 3. **Run the application**
-     ```bash
-       ./gradlew run
-     ```
-
+ 
+ ```bash
+    ./gradlew run
+ ```
 ## Testing
 To run tests:
-```bash
-  ./gradlew test
-```
+ ```bash
+    ./gradlew test
+ ```
+
+## API Endpoints
+
+| Method | Path       | Description                                            |
+|--------|------------|--------------------------------------------------------|
+| POST   | /file      | Takes a file and process it to create an Outcome file. |
+| GET    | /file/logs | Retrieves request logs                                 |
