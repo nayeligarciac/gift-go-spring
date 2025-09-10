@@ -92,7 +92,6 @@ public class IpGeolocationServiceImplWireMockTest {
                                              }
                                 """)));
 
-
         IPGeolocation result = ipGeolocationService.getIpGeolocation("127.0.0.1");
         assertNull(result);
     }
