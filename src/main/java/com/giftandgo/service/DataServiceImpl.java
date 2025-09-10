@@ -1,12 +1,21 @@
 package com.giftandgo.service;
 
+import com.giftandgo.config.FeatureFlagProperties;
 import com.giftandgo.error.BadRequestException;
 import com.giftandgo.model.EntryData;
 import com.giftandgo.model.OutcomeData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DataServiceImpl implements DataService {
+
+    private final FeatureFlagProperties featureFlagProperties;
+
+    @Autowired
+    public DataServiceImpl(FeatureFlagProperties featureFlagProperties) {
+        this.featureFlagProperties = featureFlagProperties;
+    }
 
     @Override
     public EntryData processData(String rawData) {
@@ -14,29 +23,37 @@ public class DataServiceImpl implements DataService {
         if(fields.length != 7){
             throw new BadRequestException("file with wrong number of fields");
         }
-        double averageSpeed;
-        try {
-            averageSpeed = Double.parseDouble(fields[5]);
-        } catch( NumberFormatException ex){
-            throw new BadRequestException("wrong average speed");
-        }
-
-        double topSpeed;
-        try {
-            topSpeed = Double.parseDouble(fields[6]);
-        } catch( NumberFormatException ex){
-            throw new BadRequestException("wrong top speed");
-        }
+        Double averageSpeed = getDoubleValue(fields[5], "average speed");
+        Double topSpeed = getDoubleValue(fields[6], "top speed");
 
         return new EntryData(
-                fields[0],
-                fields[1],
-                fields[2],
-                fields[3],
-                fields[4],
+                validateString(fields[0], "uuid"),
+                validateString(fields[1], "id"),
+                validateString(fields[2],"name"),
+                validateString(fields[3], "likes"),
+                validateString(fields[4],"transport"),
                 averageSpeed,
                 topSpeed
         );
+    }
+
+    private Double getDoubleValue(String value, String nameOfField){
+        try {
+            return Double.parseDouble(value);
+        } catch( NumberFormatException ex){
+            if(featureFlagProperties.isEnableValidations()) {
+                throw new BadRequestException(String.format("the field %s is not a double", nameOfField));
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private String validateString(String value, String nameOfField) {
+        if (featureFlagProperties.isEnableValidations() && (value == null || value.isEmpty())) {
+            throw new BadRequestException(String.format("the field %s is empty", nameOfField));
+        }
+        return value;
     }
 
     public OutcomeData convertToOutcomeData(EntryData entryData) {

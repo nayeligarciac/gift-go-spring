@@ -41,3 +41,12 @@ To run tests:
 |--------|------------|--------------------------------------------------------|
 | POST   | /file      | Takes a file and process it to create an Outcome file. |
 | GET    | /file/logs | Retrieves request logs                                 |
+
+
+## Feature Flag: Validation
+
+This service uses a feature flag (`enableValidations`) to control input validation behavior.
+- When enabled, strict validation is applied to incoming data.
+- When disabled, the service is more permissive and may accept incomplete or partially invalid data.
+
+Configure this flag in `src/main/resources/application.properties`:
